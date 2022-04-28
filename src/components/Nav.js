@@ -1,6 +1,11 @@
 import React from "react";
+import { useKeycloak } from "@react-keycloak/web";
 
 const Nav = () => {
+  const { keycloak } = useKeycloak();
+
+  console.log(keycloak.tokenParsed);
+
   return (
     <div>
       <div className="top-0 w-full flex flex-wrap">
@@ -24,7 +29,25 @@ const Nav = () => {
               </ul>
               <div className="hidden xl:flex items-center space-x-5">
                 <div className="hover:text-gray-200">
-                  <h1>Login</h1>
+                  {!keycloak.authenticated && (
+                    <button
+                      type="button"
+                      className="text-blue-800"
+                      onClick={() => keycloak.login()}
+                    >
+                      Login
+                    </button>
+                  )}
+
+                  {!!keycloak.authenticated && (
+                    <button
+                      type="button"
+                      className="text-blue-800"
+                      onClick={() => keycloak.logout()}
+                    >
+                      Logout ({keycloak.tokenParsed.given_name})
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
